@@ -20,7 +20,6 @@ return {
     local ftMap = {
       vim = 'indent',
       python = {'treesitter', 'indent' },
-      go = {'treesitter', 'indent' },
       git = ''
     }
 

@@ -55,7 +55,6 @@ dual("n", "gx", ":!xdg-open <c-r><c-a><CR>", { desc = "Open URL under cursor" })
 dual("n", ";", ":", { noremap = true, silent = false, desc = "Enter command mode" })
 dual("i", "jk", "<ESC>", { desc = "Exit insert mode" })
 dual("n", "<leader><leader>", ":Neotree reveal float<CR>", { desc = "Reveal current file in explorer" })
-dual("n", "<leader>vf", "va{o0", { desc = "Visual golang function"})
 
 -- Split window management
 dual("n", "<leader>sV", "<C-w>v", { desc = "Split window vertically" })
@@ -166,10 +165,6 @@ end, { desc = "Peek fold or hover" })
 dual("n", "<leader>om", require("custom.ollama_switcher").show_ollama_models, { desc = "Switch Ollama model" })
 dual("n", "<leader>on", ":AvanteChatNew<cr>", { desc = "New Avante chat" })
 dual("n", "<leader>os", ":AvanteStop<cr>", { desc = "Stop Avante chat" })
-
--- Go tests
-dual("n", "<leader>Tr", ":Neotest run<CR>", { desc = "Run test under cursor" })
-dual("n", "<leader>TT", ":Neotest summary<CR>", { desc = "Show test summary" })
 
 -- Copy relative file path
 dual("n", "<leader>yp", function()

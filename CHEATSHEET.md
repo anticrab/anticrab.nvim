@@ -148,7 +148,7 @@ LSP-сервера ставятся автоматически через Mason 
 | `<leader>cj` | `:diffget 1` (local) |
 | `<leader>ck` | `:diffget 3` (remote) |
 
-## Debugger (DAP, Go-friendly)
+## Debugger (DAP)
 
 | Клавиша | Действие |
 |---|---|
@@ -158,27 +158,16 @@ LSP-сервера ставятся автоматически через Mason 
 | `<leader>dso` / `dsi` / `dsout` | Step over / into / out |
 | `<leader>dr` | Открыть REPL |
 | `<leader>du` | Toggle DAP UI |
-| `<leader>dt` / `<leader>dT` | Debug Go test (под курсором / verbose) |
-| `<leader>dn` | Debug nearest Go test |
-| `<leader>dl` | Debug last Go test |
 
-UI открывается автоматически при старте сессии и закрывается при завершении.
+UI открывается автоматически при старте сессии и закрывается при завершении. Адаптеры под конкретные языки пока не подключены.
 
 ⚠️ **Конфликт:** `<leader>dc` одновременно «DAP continue» и «Diffview close» (биндинги в разных файлах). Что сработает — определяет порядок загрузки. Стоит переименовать один из них.
-
-## Тесты (Neotest + neotest-golang)
-
-| Клавиша | Действие |
-|---|---|
-| `<leader>Tr` | Запустить тест под курсором |
-| `<leader>TT` | Открыть summary |
 
 ## Редактирование
 
 | Клавиша | Действие |
 |---|---|
 | `ysiw"` / `ds"` / `cs"'` | mini.surround: add / delete / change surrounding |
-| `<leader>vf` | Visual выделение тела Go-функции (`va{o0`) |
 
 Autopairs: скобки/кавычки автоматически закрываются (treesitter-aware).
 
@@ -212,9 +201,9 @@ Autopairs: скобки/кавычки автоматически закрыва
 - **indent-blankline** — направляющие отступа `|`.
 - **barbecue** — breadcrumbs по LSP в верхней строке окна.
 - **lualine** — status line, тема `catppuccin-nvim`.
-- **conform.nvim** — `goimports` на сохранении для Go.
+- **conform.nvim** — форматирование на сохранении (форматтеры пока не настроены, добавим под Python/C++).
 - **todo-comments** — подсветка `TODO/FIXME/HACK` (`:TodoTelescope`, `:Trouble todo`).
-- **treesitter** — подсветка для `lua/go/python` + автоустановка для новых языков.
+- **treesitter** — подсветка для `lua/python` + автоустановка для новых языков.
 
 ## Темы
 
