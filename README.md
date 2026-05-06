@@ -52,7 +52,7 @@ A modern, modular Neovim configuration written in **Lua**, focused on performanc
 ### Installation
 
 ```bash
-git clone https://github.com/WithSoull/soull.nvim ~/.config/nvim
+git clone https://github.com/anticrab/anticrab.nvim ~/.config/nvim
 nvim
 ```
 

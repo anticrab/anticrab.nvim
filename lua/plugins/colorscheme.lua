@@ -4,15 +4,17 @@ local theme_config = {
   latte = { transparent = false },
 }
 
--- Detect macOS system appearance
+-- Detect GNOME system appearance via gsettings.
+-- Returns "dark" when undetectable so a missing GNOME / gsettings doesn't flash a white background.
 local function get_system_appearance()
-  local handle = io.popen("defaults read -g AppleInterfaceStyle 2>/dev/null")
-  local result = handle:read("*a")
+  local handle = io.popen("gsettings get org.gnome.desktop.interface color-scheme 2>/dev/null")
+  if not handle then return "dark" end
+  local result = handle:read("*a") or ""
   handle:close()
-  if result:match("Dark") then
-    return "dark"
-  end
-  return "light"
+
+  if result:match("dark") then return "dark" end
+  if result:match("light") then return "light" end
+  return "dark"
 end
 
 local function flavor_for_appearance(appearance)
