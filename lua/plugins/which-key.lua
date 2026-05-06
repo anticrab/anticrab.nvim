@@ -15,6 +15,7 @@ return {
     spec = {
       { "<leader>c", group = "diff (Conflict)" },
       { "<leader>d", group = "Diffview / DAP" },
+      { "<leader>D", group = "Docker project" },
       { "<leader>e", group = "Explorer / Errors" },
       { "<leader>f", group = "Find (Telescope)" },
       { "<leader>g", group = "LSP / Goto" },

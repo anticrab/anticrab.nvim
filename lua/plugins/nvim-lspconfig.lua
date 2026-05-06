@@ -35,6 +35,7 @@ return {
         -- 'tsserver', -- requires npm to be installed
         -- 'yamlls', -- requires npm to be installed
         'pyright',
+        'clangd',
         -- 'buf-language-server',
       },
       automatic_enable=false,
@@ -59,12 +60,46 @@ return {
       },
     }
 
+    -- Per-project Docker integration: when a `.nvim-docker.lua` marker is
+    -- present in the cwd's tree, route configured servers through `docker exec`
+    -- so they run inside the project's container with ROS2 / build env loaded.
+    local docker_project = require("core.docker-project")
+    local docker_lsp = require("core.docker-project.lsp")
+    local docker_status = require("core.docker-project.status")
+    local docker_cfg = docker_project.config()
+
+    local skipped_servers = {}
+    if docker_cfg and not docker_status.is_running(docker_cfg) then
+      vim.notify(
+        ("[docker-project] container is not running for %s — open <leader>Ds and `make up`, then :LspRestart")
+          :format(vim.fs.basename(docker_cfg._root or "?")),
+        vim.log.levels.WARN
+      )
+      for _, srv in ipairs(docker_lsp.known_servers()) do
+        if (docker_cfg.lsp or {})[srv] and (docker_cfg.lsp[srv].enabled ~= false) then
+          skipped_servers[srv] = true
+        end
+      end
+    end
+
     -- Call setup on each LSP server
     for _, server in ipairs(require("mason-lspconfig").get_installed_servers()) do
-      lspconfig[server].setup(vim.tbl_deep_extend("force", {
-        on_attach = lsp_attach,
-        capabilities = lsp_capabilities,
-      }, server_settings[server] or {}))
+      if skipped_servers[server] then
+        -- Marker active but container down: skip wrapped server entirely.
+        -- (Host LSP would spam errors with no ROS2/std headers visible.)
+      else
+        local opts = vim.tbl_deep_extend("force", {
+          on_attach = lsp_attach,
+          capabilities = lsp_capabilities,
+        }, server_settings[server] or {})
+
+        local wrapped = docker_lsp.wrap_cmd(server, opts.cmd, docker_cfg)
+        if wrapped then
+          opts.cmd = wrapped
+        end
+
+        lspconfig[server].setup(opts)
+      end
     end
 
     -- Globally configure all LSP floating preview popups (like hover, signature help, etc)

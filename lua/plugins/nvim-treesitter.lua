@@ -18,6 +18,9 @@ return {
     ensure_installed = {
       'lua',
       'python',
+      'c',
+      'cpp',
+      'cmake',
     },
   },
   config = function (_, opts)

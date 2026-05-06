@@ -132,6 +132,15 @@ dual('n', '<leader>gp', '<cmd>lua vim.diagnostic.goto_prev()<CR>', { desc = "Pre
 dual('n', '<leader>gn', '<cmd>lua vim.diagnostic.goto_next()<CR>', { desc = "Next diagnostic" })
 dual('n', '<leader>tr', '<cmd>lua vim.lsp.buf.document_symbol()<CR>', { desc = "Document symbols" })
 
+-- C/C++: switch between source and header file (via clangd)
+dual('n', '<leader>gh', function()
+  if vim.bo.filetype == "cpp" or vim.bo.filetype == "c" then
+    vim.cmd("ClangdSwitchSourceHeader")
+  else
+    vim.notify("Only available in C/C++ files", vim.log.levels.WARN)
+  end
+end, { desc = "Switch C/C++ source/header" })
+
 -- Flash (navigation) — 's' to jump, 'S' for treesitter select (defined in flash.lua)
 
 
@@ -178,5 +187,8 @@ dual("n", "<leader>yp", function()
   vim.fn.setreg('+', path)
   vim.notify("Copied: " .. path, vim.log.levels.INFO)
 end, { desc = "Copy relative file path" })
+
+-- Docker project (<leader>D*) — registered with Russian-layout aliases via dual()
+require("core.docker-project.keymaps").register(dual)
 
 return { dual = dual }

@@ -36,6 +36,31 @@ return {
       end, { desc = "DAP conditional breakpoint" })
       map("n", "<leader>dr", function() dap.repl.open() end, { desc = "DAP REPL" })
       map("n", "<leader>du", function() dapui.toggle() end, { desc = "DAP UI toggle" })
+
+      -- C/C++ via codelldb (binary installed by Mason)
+      local codelldb_path = vim.fn.stdpath("data") .. "/mason/packages/codelldb/extension/adapter/codelldb"
+      dap.adapters.codelldb = {
+        type = "server",
+        port = "${port}",
+        executable = {
+          command = codelldb_path,
+          args = { "--port", "${port}" },
+        },
+      }
+      local cpp_configs = {
+        {
+          name = "Launch (codelldb)",
+          type = "codelldb",
+          request = "launch",
+          program = function()
+            return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+          end,
+          cwd = "${workspaceFolder}",
+          stopOnEntry = false,
+        },
+      }
+      dap.configurations.cpp = cpp_configs
+      dap.configurations.c = cpp_configs
     end,
   },
 }
