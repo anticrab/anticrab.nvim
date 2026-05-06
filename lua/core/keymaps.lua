@@ -68,7 +68,13 @@ dual("n", "<leader>sh", "<C-w><5", { desc = "Make split narrower" })
 
 -- Tab management
 dual("n", "<leader>to", ":tabnew<CR>", { desc = "Open new tab" })
-dual("n", "<leader>tx", ":BufferClose<CR>", { desc = "Close buffer" })
+dual("n", "<leader>tx", function()
+  if vim.bo.buftype == "terminal" then
+    vim.cmd("BufferClose!") -- терминал: убиваем процесс без вопросов
+  else
+    vim.cmd("BufferClose")
+  end
+end, { desc = "Close buffer" })
 dual("n", "<leader>tn", ":BufferNext<CR>", { desc = "Next buffer" })
 dual("n", "<leader>tp", ":BufferPrevious<CR>", { desc = "Previous buffer" })
 dual("n", "<leader>Tn", ":BufferMoveNext<CR>", { desc = "Move buffer next" })
