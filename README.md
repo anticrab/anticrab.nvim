@@ -95,6 +95,25 @@ rm /tmp/lazygit /tmp/lazygit.tar.gz
 
 **`xdg-utils`** for `gx` to open URLs under cursor via `xdg-open` — usually preinstalled.
 
+### Alternative: symlink mode (for hacking on the config)
+
+If you want to keep the repo somewhere else (e.g. `~/projects/anticrab.nvim`) and have edits there take effect immediately, clone there and symlink instead:
+
+```bash
+# Back up any existing nvim config first
+[ -e ~/.config/nvim ] && mv ~/.config/nvim ~/.config/nvim.bak.$(date +%s)
+
+# Clone where you want to edit it, then symlink into the XDG config dir
+git clone https://github.com/anticrab/anticrab.nvim ~/projects/anticrab.nvim
+ln -s ~/projects/anticrab.nvim ~/.config/nvim
+
+nvim
+```
+
+From then on, every `git pull` (or local edit under `~/projects/anticrab.nvim/`) is live without any further install step.
+
+> If you also use [anticrab.tmux](https://github.com/anticrab/anticrab.tmux) and prefer this layout, run its `install.sh --symlink` for the same flow.
+
 ### Need a newer Neovim than apt ships?
 
 Apt's `neovim` may lag behind. For the latest stable, prefer the official AppImage or snap:
