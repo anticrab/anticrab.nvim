@@ -45,46 +45,45 @@ A modern, modular Neovim configuration written in **Lua**, focused on performanc
 
 ## 🚀 Getting Started
 
-### Prerequisites
-
-Tested on Ubuntu / Debian with GNOME. The dark/light theme detector reads `gsettings org.gnome.desktop.interface color-scheme`; on other DEs it falls back to dark.
-
-**Required:**
-
-| Tool | Why | Ubuntu/Debian install |
-|---|---|---|
-| Neovim ≥ 0.9 | The editor | `sudo apt install neovim` (or build from source for latest) |
-| `git` | Lazy.nvim clones plugins | `sudo apt install git` |
-| `make` + C compiler | Builds `telescope-fzf-native` and treesitter parsers | `sudo apt install build-essential` |
-| `ripgrep` | Telescope live grep (`<leader>fg`) | `sudo apt install ripgrep` |
-| Nerd Font | Icons in lualine / barbar / neo-tree | e.g. [JetBrainsMono Nerd Font](https://www.nerdfonts.com/) — set in your terminal |
-| Clipboard tool | `"+y` / `"+p` system-clipboard yank/paste | X11: `sudo apt install xclip`; Wayland: `sudo apt install wl-clipboard` |
-
-**Recommended (specific features will warn if missing):**
-
-| Tool | Feature |
-|---|---|
-| `lazygit` | `<leader>lg` git TUI — see install snippet below (official GitHub release; the `lazygit-team/release` PPA does not publish for Ubuntu 24.04 noble) |
-| `fd-find` | Faster Telescope `find_files` (binary is `fdfind` on Debian) — `sudo apt install fd-find` |
-| `xdg-utils` | `gx` opens URL under cursor via `xdg-open` — usually preinstalled |
-
-**Auto-installed by the config (no manual action needed):**
-
-- LSP servers via Mason: `lua_ls`, `lemminx`, `marksman`, `quick_lint_js`, `pyright`
-- Treesitter parsers: `lua`, `python`
-- All Lua plugins via `lazy.nvim` on first launch
-
-### One-liner for fresh Ubuntu
+### TL;DR — three commands
 
 ```bash
+# 1. System dependencies (X11; for Wayland swap xclip → wl-clipboard)
 sudo apt update && sudo apt install -y \
-  neovim git curl build-essential \
-  ripgrep fd-find xclip
+    neovim git curl build-essential ripgrep fd-find xclip
+
+# 2. Nerd Font (set it as your terminal font afterwards — required for icons)
+#    https://www.nerdfonts.com/font-downloads — pick e.g. JetBrainsMono Nerd Font
+
+# 3. Clone the config and launch nvim
+git clone https://github.com/anticrab/anticrab.nvim ~/.config/nvim && nvim
 ```
 
-(swap `xclip` for `wl-clipboard` on Wayland.)
+That's it. On first launch:
+- `lazy.nvim` bootstraps itself, then clones every plugin (~1 min — wait for the progress bar).
+- `mason-lspconfig` + `mason-tool-installer` auto-install LSP servers (`lua_ls`, `pyright`, `clangd`, `lemminx`, `marksman`, `quick_lint_js`) and tools (`ruff`, `clang-format`, `debugpy`, `codelldb`) in the background.
+- Treesitter parsers auto-install on first open of any new filetype.
 
-Then install **lazygit** from its GitHub release (the apt PPA is not available on Ubuntu 24.04):
+After the dust settles, run `:checkhealth` — everything should be green except the deliberately disabled Node/Perl/Ruby/Python-host providers.
+
+> 🐳 **About `.nvim-docker.lua`:** ignore it unless your project's toolchain lives in a Docker container. For native projects, host LSPs work as in any standard nvim setup. See the [Docker-based projects](#-docker-based-projects-per-project-lsp--linters--formatters) section if you want to route LSP / linters / formatters into a container.
+
+### What each system package is for
+
+| Package | Why it's needed |
+|---|---|
+| `neovim` | The editor itself (≥ 0.9 required; ≥ 0.11 for the native LSP API used here) |
+| `git` | Lazy.nvim clones plugins from GitHub |
+| `build-essential` | Compiles `telescope-fzf-native` and tree-sitter parsers |
+| `curl` | Used by Mason to fetch LSP servers / tools |
+| `ripgrep` | Telescope live grep (`<leader>fg`) |
+| `fd-find` | Faster `find_files` for Telescope (binary is `fdfind` on Debian) |
+| `xclip` *(X11)* / `wl-clipboard` *(Wayland)* | System-clipboard `"+y` / `"+p` |
+| Nerd Font | Icons in lualine / barbar / neo-tree (set in your terminal, not via apt) |
+
+### Optional packages (specific features will warn if missing)
+
+**`lazygit`** for the `<leader>lg` git TUI. The apt PPA does not publish for Ubuntu 24.04, so install from the GitHub release:
 
 ```bash
 LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
@@ -94,45 +93,29 @@ sudo install /tmp/lazygit -D -t /usr/local/bin/
 rm /tmp/lazygit /tmp/lazygit.tar.gz
 ```
 
-### After first launch — install Mason-managed tools
+**`xdg-utils`** for `gx` to open URLs under cursor via `xdg-open` — usually preinstalled.
 
-The config uses [mason-tool-installer](https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim) to auto-install non-LSP tools (`ruff`, `clang-format`, `debugpy`, `codelldb`) on first start. To verify or trigger manually:
+### Need a newer Neovim than apt ships?
 
-```vim
-:Mason                 " UI: see what's installed
-:MasonToolsInstall     " kick off the auto-install (async)
-```
-
-LSP servers are auto-installed via `mason-lspconfig` (`lua_ls`, `lemminx`, `marksman`, `quick_lint_js`, `pyright`, `clangd`).
-
-Wait until installs complete (Mason shows progress in top-right). After that, run:
-
-```vim
-:checkhealth
-```
-
-to confirm everything is green. The config explicitly disables Node / Perl / Ruby / Python-host providers, so warnings about missing `neovim` npm package, `Neovim::Ext`, `ruby/gem`, or `pynvim` are silenced.
-
-### Installation
+Apt's `neovim` may lag behind. For the latest stable, prefer the official AppImage or snap:
 
 ```bash
-git clone https://github.com/anticrab/anticrab.nvim ~/.config/nvim
-nvim
+# Option A — AppImage (no system changes)
+curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage
+chmod +x nvim-linux-x86_64.appimage
+sudo install nvim-linux-x86_64.appimage /usr/local/bin/nvim
+
+# Option B — snap
+sudo snap install nvim --classic
 ```
 
-Lazy.nvim will automatically bootstrap and install plugins on first run. After that, run `:Lazy sync` once to be sure everything is up to date, and `:Mason` to verify LSP servers installed cleanly.
+### Mason controls (rarely needed manually)
 
-### First-launch checklist
-
-If this is your first time:
-
-1. **Set a Nerd Font in your terminal.** Without it, status-line and file-tree icons render as boxes. Examples: JetBrainsMono Nerd Font, FiraCode Nerd Font.
-2. **Clone and launch** (commands above). Lazy.nvim auto-bootstraps; on the first launch you'll see a progress bar while plugins clone — wait it out (~1 min).
-3. **Inside nvim, run `:Mason`** to confirm LSP servers are installed (`pyright`, `clangd`, `lua_ls`, etc.). They auto-install via `mason-lspconfig`; if any are missing, run `:MasonToolsInstall` and wait.
-4. **Run `:checkhealth`** — should be all green except the providers section (those are intentionally disabled).
-5. **You're done.** No manual config edits are required to start. Open a file in your project and edit normally.
-
-> 🐳 **About `.nvim-docker.lua`:** ignore it unless your project's toolchain lives in a Docker container. For native C++ / Python / Go / web projects on the host, do nothing — host LSPs work as in any standard nvim setup. The Docker section below is opt-in and only relevant if you want to route LSP / linters / formatters into a container.
+```vim
+:Mason                 " UI: inspect what's installed
+:MasonToolsInstall     " re-run auto-install (async; useful after CI failures)
+:checkhealth mason     " diagnose Mason itself
+```
 
 ### Common keybindings
 
@@ -326,22 +309,39 @@ return {
 
 > ⚠️ Make sure the marker file (`.nvim-docker.lua`) is the **current buffer** when you run `:trust` — `:trust` operates on the current buffer. Trusting a different file silently does the wrong thing.
 
-**Tools the container must provide.** The wrapped LSPs / linters / formatters all run inside your container, so its image needs to ship them. For a fresh container, add the following to your Dockerfile (paths inside the container):
+**Tools the container must provide.** The wrapped LSPs / linters / formatters all run inside your container, so its image needs to ship them. Add this to your Dockerfile — only the rows for what your marker enables:
 
 ```dockerfile
-# C/C++: clangd language server (the package ships clangd-N; alias to `clangd`)
+# Common to every wrapped setup
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        clangd-15 jq \
+        bash jq \
+    && rm -rf /var/lib/apt/lists/*
+# `bash` — the wrapper invokes `bash -c`. `jq` — only needed if your `commands`
+# entries aggregate per-package compile_commands.json (see ROS2 example).
+
+# C/C++ LSP — clangd. Ubuntu ships versioned binaries; alias to `clangd`.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        clangd-15 \
     && update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-15 100 \
     && rm -rf /var/lib/apt/lists/*
 
-# Python: pyright LSP (npm-distributed; pip wrapper bundles node)
+# C/C++ formatter / linter — only if `formatters.cpp = "clang_format_container"`
+# or `linters.cpp = { "clangtidy" }` is set in the marker.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        clang-format clang-tidy \
+    && rm -rf /var/lib/apt/lists/*
+
+# Python LSP — pyright (only if `lsp.pyright.enabled = true`).
 RUN pip3 install --no-cache-dir pyright
+
+# ROS2 ament linters — only if `linters.python = { "ament_flake8", "ament_pep257" }`.
+# Replace `humble` with your ROS2 distribution.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        ros-humble-ament-flake8 ros-humble-ament-pep257 \
+    && rm -rf /var/lib/apt/lists/*
 ```
 
-`jq` is required by `<leader>Db` to merge per-package `compile_commands.json` into one workspace DB. `clangd-15` is what was tested; any modern clangd works — pin a version that matches your toolchain.
-
-For ROS2-specific tooling (`ament_flake8`, `ament_pep257`, `clang-format`, `clang-tidy`) use the ROS apt packages, e.g. `ros-humble-ament-flake8`, `ros-humble-ament-pep257`, plus distribution `clang-format`/`clang-tidy`.
+Versions: `clangd-15` is what was tested. Any modern clangd works — pin one that matches your toolchain.
 
 **One persistent shell, one tab:** Every project-defined `<leader>D<key>` command — and `<leader>Ds` — is dispatched to a **singleton in-container bash** that lives in its own nvim tab. Output history accumulates across all runs, so you can scroll back. The first command opens the tab; later commands focus it (or open it again if you closed it). The shell is fully interactive — you can type your own commands too.
 
