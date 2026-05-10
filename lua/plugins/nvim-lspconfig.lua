@@ -41,7 +41,6 @@ return {
       automatic_enable=false,
     })
 
-    local lspconfig = require('lspconfig')
     local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
     local lsp_attach = function(client, bufnr)
       -- Create your keybindings here...
@@ -82,12 +81,13 @@ return {
       end
     end
 
-    -- Call setup on each LSP server
+    -- Configure & enable each installed server using the nvim-0.11 native
+    -- LSP API. nvim-lspconfig ships per-server defaults under `lsp/<name>.lua`
+    -- on its runtimepath; `vim.lsp.config(name, overrides)` merges our
+    -- overrides on top, and `vim.lsp.enable(name)` wires the FileType
+    -- autocmd that auto-attaches the client.
     for _, server in ipairs(require("mason-lspconfig").get_installed_servers()) do
-      if skipped_servers[server] then
-        -- Marker active but container down: skip wrapped server entirely.
-        -- (Host LSP would spam errors with no ROS2/std headers visible.)
-      else
+      if not skipped_servers[server] then
         local opts = vim.tbl_deep_extend("force", {
           on_attach = lsp_attach,
           capabilities = lsp_capabilities,
@@ -98,8 +98,11 @@ return {
           opts.cmd = wrapped
         end
 
-        lspconfig[server].setup(opts)
+        vim.lsp.config(server, opts)
+        vim.lsp.enable(server)
       end
+      -- else: marker active but container down; skip wrapped server entirely.
+      -- (Host LSP would spam errors with no ROS2/std headers visible.)
     end
 
     -- Globally configure all LSP floating preview popups (like hover, signature help, etc)

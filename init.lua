@@ -1,15 +1,3 @@
--- remove noisy notify messages
-local orig = vim.notify
-vim.notify = function(msg, level, opts)
-  if type(msg) == "string" and msg:match("deprecated") then
-    -- глушим спам от lspconfig про разные deprecated API
-    if msg:match("require%('lspconfig'%)") then return end       -- источник: require()
-    if msg:match("lspconfig%.[%w_]+%.setup") then return end     -- источник: setup()
-    if msg:match("lspconfig%[") then return end                  -- источник: index access
-  end
-  return orig(msg, level, opts)
-end
-
 -- Bootstrap lazy
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
