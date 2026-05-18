@@ -132,13 +132,34 @@ dual('n', '<leader>gp', '<cmd>lua vim.diagnostic.goto_prev()<CR>', { desc = "Pre
 dual('n', '<leader>gn', '<cmd>lua vim.diagnostic.goto_next()<CR>', { desc = "Next diagnostic" })
 dual('n', '<leader>tr', '<cmd>lua vim.lsp.buf.document_symbol()<CR>', { desc = "Document symbols" })
 
--- C/C++: switch between source and header file (via clangd)
+-- C/C++: switch between source and header file (via clangd's
+-- textDocument/switchSourceHeader extension). Called directly on the LSP
+-- client because the nvim-0.11 native API doesn't auto-register the
+-- ClangdSwitchSourceHeader user command (that one came from lspconfig).
 dual('n', '<leader>gh', function()
-  if vim.bo.filetype == "cpp" or vim.bo.filetype == "c" then
-    vim.cmd("ClangdSwitchSourceHeader")
-  else
+  if vim.bo.filetype ~= "cpp" and vim.bo.filetype ~= "c" then
     vim.notify("Only available in C/C++ files", vim.log.levels.WARN)
+    return
   end
+  local bufnr = vim.api.nvim_get_current_buf()
+  local client = vim.lsp.get_clients({ bufnr = bufnr, name = "clangd" })[1]
+  if not client then
+    vim.notify("clangd is not attached to this buffer", vim.log.levels.WARN)
+    return
+  end
+  client:request("textDocument/switchSourceHeader",
+    { uri = vim.uri_from_bufnr(bufnr) },
+    function(err, result)
+      if err then
+        vim.notify("clangd: " .. tostring(err), vim.log.levels.ERROR)
+        return
+      end
+      if not result or result == "" then
+        vim.notify("Corresponding source/header file not found", vim.log.levels.WARN)
+        return
+      end
+      vim.cmd.edit(vim.uri_to_fname(result))
+    end, bufnr)
 end, { desc = "Switch C/C++ source/header" })
 
 -- Flash (navigation) — 's' to jump, 'S' for treesitter select (defined in flash.lua)

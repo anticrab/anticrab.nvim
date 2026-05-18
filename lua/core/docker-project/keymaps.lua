@@ -175,20 +175,50 @@ local function shell_focus()
   focus_term(cfg)
 end
 
+-- Restart one LSP server by name using the native 0.11+ API. The legacy
+-- :LspRestart command isn't registered when nvim ≥ 0.12 because the built-in
+-- `:lsp` command makes nvim-lspconfig bail out of its plugin/lspconfig.lua.
+-- We stop any active clients with that name, then re-fire FileType on every
+-- loaded buffer so the autocmd installed by `vim.lsp.enable(name)` re-attaches.
+local function restart_lsp_by_name(name)
+  for _, client in ipairs(vim.lsp.get_clients({ name = name })) do
+    client:stop()
+  end
+  vim.defer_fn(function()
+    vim.lsp.enable(name)
+    for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+      if vim.api.nvim_buf_is_loaded(bufnr) then
+        local ft = vim.bo[bufnr].filetype
+        if ft ~= "" then
+          vim.api.nvim_exec_autocmds("FileType",
+            { buffer = bufnr, pattern = ft, modeline = false })
+        end
+      end
+    end
+  end, 200)
+end
+
 -- Built-in: restart wrapped LSP clients.
 local function restart_wrapped_lsps()
   local cfg = docker_project.config()
   if not cfg then
-    vim.cmd("LspRestart")
+    for _, client in ipairs(vim.lsp.get_clients()) do
+      client:stop()
+    end
+    vim.notify("[docker-project] no marker — stopped all LSP clients (will reattach)", vim.log.levels.INFO)
     return
   end
   require("core.docker-project.status").invalidate()
   docker_project.invalidate()
   local wrapped = require("core.docker-project.lsp").known_servers()
+  local restarted = {}
   for _, srv in ipairs(wrapped) do
-    if (cfg.lsp or {})[srv] then vim.cmd("LspRestart " .. srv) end
+    if (cfg.lsp or {})[srv] then
+      restart_lsp_by_name(srv)
+      table.insert(restarted, srv)
+    end
   end
-  vim.notify("[docker-project] restarted: " .. table.concat(wrapped, ", "), vim.log.levels.INFO)
+  vim.notify("[docker-project] restarted: " .. table.concat(restarted, ", "), vim.log.levels.INFO)
 end
 
 -- Built-in: print marker / container summary.
