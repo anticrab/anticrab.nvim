@@ -53,7 +53,6 @@ dual("n", "<leader>ww", ":w<CR>", { desc = "Save file" })
 dual("n", "<leader>E", ":e", { desc = "Reload page" })
 dual("n", "gx", ":!xdg-open <c-r><c-a><CR>", { desc = "Open URL under cursor" })
 dual("n", ";", ":", { noremap = true, silent = false, desc = "Enter command mode" })
-dual("i", "jk", "<ESC>", { desc = "Exit insert mode" })
 dual("n", "<leader><leader>", ":Neotree reveal float<CR>", { desc = "Reveal current file in explorer" })
 
 -- Split window management
