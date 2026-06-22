@@ -50,7 +50,8 @@ A modern, modular Neovim configuration written in **Lua**, focused on performanc
 ```bash
 # 1. System dependencies (X11; for Wayland swap xclip → wl-clipboard)
 sudo apt update && sudo apt install -y \
-    neovim git curl build-essential ripgrep fd-find xclip
+    neovim git curl build-essential ripgrep fd-find xclip \
+    nodejs npm python3-pip python3-venv libxml2-utils
 
 # 2. Nerd Font (set it as your terminal font afterwards — required for icons)
 #    https://www.nerdfonts.com/font-downloads — pick e.g. JetBrainsMono Nerd Font
@@ -64,7 +65,7 @@ cd ~/.config/nvim && ./install.sh
 
 That's it. On first launch:
 - `lazy.nvim` bootstraps itself, then clones every plugin (~1 min — wait for the progress bar).
-- `mason-lspconfig` + `mason-tool-installer` auto-install LSP servers (`lua_ls`, `pyright`, `clangd`, `lemminx`, `marksman`, `quick_lint_js`) and tools (`ruff`, `clang-format`, `debugpy`, `codelldb`) in the background.
+- `mason-lspconfig` + `mason-tool-installer` auto-install LSP servers (`lua_ls`, `pyright`, `clangd`, `lemminx`, `marksman`, `quick_lint_js`) and tools (`ruff`, `clang-format`, `prettier`, `stylua`, `shfmt`, `gersemi`, `taplo`, `debugpy`, `codelldb`) in the background.
 - Treesitter parsers auto-install on first open of any new filetype.
 
 After the dust settles, run `:checkhealth` — everything should be green except the deliberately disabled Node/Perl/Ruby/Python-host providers.
@@ -81,6 +82,9 @@ After the dust settles, run `:checkhealth` — everything should be green except
 | `curl` | Used by Mason to fetch LSP servers / tools |
 | `ripgrep` | Telescope live grep (`<leader>fg`) |
 | `fd-find` | Faster `find_files` for Telescope (binary is `fdfind` on Debian) |
+| `nodejs`, `npm` | Mason installs `prettier` (Markdown/JSON/YAML formatter) via npm |
+| `python3-pip`, `python3-venv` | Mason installs pip-based tools (`clang-format`, `gersemi`, `debugpy`) |
+| `libxml2-utils` | `xmllint` — XML formatter (`package.xml` / launch / xacro) |
 | `xclip` *(X11)* / `wl-clipboard` *(Wayland)* | System-clipboard `"+y` / `"+p` |
 | Nerd Font | Icons in lualine / barbar / neo-tree (set in your terminal, not via apt) |
 
