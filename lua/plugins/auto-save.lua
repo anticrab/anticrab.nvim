@@ -13,7 +13,7 @@ return {
     condition = function()
       local excluded_filetypes = {
         "gitcommit", "NvimTree", "TelescopePrompt", "alpha", "dashboard",
-        "lazygit", "neo-tree", "oil", "prompt", "toggleterm"
+        "neo-tree", "oil", "prompt", "toggleterm"
       }
       local ft = vim.bo.filetype
       for _, v in ipairs(excluded_filetypes) do

@@ -248,7 +248,7 @@ These are plain `:terminal` buffers, just like file buffers — they show up in 
 | `<C-\><C-n>` | Same, canonical method |
 | `<C-h/j/k/l>` | Move to neighboring window |
 
-`<Esc>` is left untouched in terminal-mode so TUI apps (lazygit, htop, fzf) continue to work.
+`<Esc>` is left untouched in terminal-mode so TUI apps (htop, fzf) continue to work.
 
 **On-demand split terminals via commands:**
 
@@ -256,21 +256,6 @@ These are plain `:terminal` buffers, just like file buffers — they show up in 
 :ToggleTerm direction=horizontal size=20      " bottom split, height 20
 :ToggleTerm direction=vertical size=80        " right split, width 80
 ```
-
-## Git — lazygit
-
-| Key | Action |
-|---|---|
-| `<leader>lg` | Toggle fullscreen lazygit |
-
-Lazygit's own keys (most-used):
-- `1`/`2`/`3`/`4`/`5` — switch between panels (status / files / branches / commits / stash)
-- `space` — stage/unstage file or hunk
-- `c` — commit (opens editor for message)
-- `P` — push, `p` — pull
-- `b` — branch menu
-- `?` — context-aware help
-- `q` — quit
 
 ## Git — diffview
 
@@ -361,7 +346,7 @@ Auto-saves and auto-restores sessions per cwd. Commands: `:SessionSave`, `:Sessi
 - **indent-blankline** — `|` indent guides.
 - **barbecue** — LSP-based breadcrumbs in the winbar.
 - **lualine** — status line, theme `catppuccin-nvim`.
-- **conform.nvim** — format-on-save: Python via `ruff_format` + `ruff_organize_imports`, C/C++ via `clang_format`. Run manually with `<leader>gf`.
+- **conform.nvim** — formatting: Python via `ruff_format` + `ruff_organize_imports`, C/C++ via `clang_format`. **Format-on-save is OFF by default** — format manually with `<leader>gf` or `:Format`. Toggle auto-format-on-save with `:FormatEnable` / `:FormatDisable` / `:FormatToggle`.
 - **todo-comments** — highlights `TODO/FIXME/HACK` (`:TodoTelescope`, `:Trouble todo`).
 - **treesitter** — highlighting for `lua/python/c/cpp/cmake` + auto-install for new languages.
 
@@ -372,7 +357,7 @@ Auto-saves and auto-restores sessions per cwd. Commands: `:SessionSave`, `:Sessi
 | `<leader>` (and wait 0.3s) | Popup with all available continuations and descriptions |
 | `<leader>?` | Show all mappings active in the current buffer |
 
-Prefix groups are labeled: `<leader>g` = LSP/Goto, `<leader>f` = Find, `<leader>x` = Trouble, `<leader>s` = Splits, `<leader>t` = Tabs/Buffers/Term#, `<leader>d` = DAP/Diffview, `<leader>l` = Lazygit, etc.
+Prefix groups are labeled: `<leader>g` = LSP/Goto, `<leader>f` = Find, `<leader>x` = Trouble, `<leader>s` = Splits, `<leader>t` = Tabs/Buffers/Term#, `<leader>d` = DAP/Diffview, etc.
 
 ## Themes
 

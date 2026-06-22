@@ -35,8 +35,8 @@ A modern, modular Neovim configuration written in **Lua**, focused on performanc
 - 🎯 Debugging via `nvim-dap` + `dap-ui` (Python via debugpy, C/C++ via codelldb)
 - 🧱 Code completion through `nvim-cmp` + LuaSnip
 - 🎨 Custom UI: `lualine`, `barbar`, `barbecue` breadcrumbs, `catppuccin` theme (auto-syncs to GNOME light/dark)
-- 🧼 Format-on-save via `conform.nvim` (Python `ruff`, C/C++ `clang-format`)
-- 💡 Git: `gitsigns.nvim` (hunk gutter), `diffview.nvim` (PR-style diffs), `lazygit` integration
+- 🧼 Manual formatting via `conform.nvim` (Python `ruff`, C/C++ `clang-format`) — format-on-save off by default, toggle with `:FormatEnable`
+- 💡 Git: `gitsigns.nvim` (hunk gutter), `diffview.nvim` (PR-style diffs)
 - 🖥 Built-in terminal layer via `toggleterm.nvim`: floating quick-shell + numbered buffer-terminals
 - ⌨️ Live keybinding hints with `which-key.nvim`
 - 🎨 Custom random tabs colors ![screenshot](media/4.gif)
@@ -82,16 +82,6 @@ After the dust settles, run `:checkhealth` — everything should be green except
 | Nerd Font | Icons in lualine / barbar / neo-tree (set in your terminal, not via apt) |
 
 ### Optional packages (specific features will warn if missing)
-
-**`lazygit`** for the `<leader>lg` git TUI. The apt PPA does not publish for Ubuntu 24.04, so install from the GitHub release:
-
-```bash
-LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
-curl -Lo /tmp/lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
-tar xf /tmp/lazygit.tar.gz -C /tmp lazygit
-sudo install /tmp/lazygit -D -t /usr/local/bin/
-rm /tmp/lazygit /tmp/lazygit.tar.gz
-```
 
 **`xdg-utils`** for `gx` to open URLs under cursor via `xdg-open` — usually preinstalled.
 
@@ -146,7 +136,6 @@ A small starter set; full reference in [`CHEATSHEET.md`](./CHEATSHEET.md). Press
 | `<leader>fg` | Live grep across project |
 | `<leader><leader>` | Reveal current file in file explorer |
 | `ss` / `S` | Flash 2-char jump / treesitter-aware jump |
-| `<leader>lg` | Open lazygit |
 | `<leader>/` | Toggle floating terminal |
 | `<leader>t1`–`<leader>t9` | Numbered terminal buffers |
 | `<leader>ww` / `<leader>qq` | Save / quit |
@@ -422,7 +411,7 @@ Reserved keys: `s`, `r`, `i`, `l` cannot be used in `commands[*].key`.
 | [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) + [mason.nvim](https://github.com/williamboman/mason.nvim) | LSP setup; auto-installs `lua_ls`, `marksman`, `lemminx`, `quick_lint_js`, `pyright`, `clangd` |
 | [mason-tool-installer.nvim](https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim) | Auto-installs `ruff`, `clang-format`, `debugpy`, `codelldb` |
 | [nvim-cmp](https://github.com/hrsh7th/nvim-cmp) + [LuaSnip](https://github.com/L3MON4D3/LuaSnip) | Completion + snippets |
-| [conform.nvim](https://github.com/stevearc/conform.nvim) | Format-on-save (Python `ruff`, C/C++ `clang-format`; container-routed when a `.nvim-docker.lua` marker is active) |
+| [conform.nvim](https://github.com/stevearc/conform.nvim) | Manual formatting; format-on-save off by default (Python `ruff`, C/C++ `clang-format`; container-routed when a `.nvim-docker.lua` marker is active) |
 | [nvim-lint](https://github.com/mfussenegger/nvim-lint) | Async linters on save (only attaches per-marker — `ament_flake8` / `ament_pep257` / `clang-tidy` inside the container) |
 | [nvim-dap](https://github.com/mfussenegger/nvim-dap) + [dap-ui](https://github.com/rcarriga/nvim-dap-ui) + [dap-virtual-text](https://github.com/theHamsta/nvim-dap-virtual-text) | Debug Adapter Protocol with UI |
 | [nvim-dap-python](https://github.com/mfussenegger/nvim-dap-python) | Python debugger wrapper (via debugpy) |
@@ -435,7 +424,7 @@ Reserved keys: `s`, `r`, `i`, `l` cannot be used in `commands[*].key`.
 |---|---|
 | [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim) | Git gutter + hunk operations + blame |
 | [diffview.nvim](https://github.com/sindrets/diffview.nvim) | PR-style diff & file history |
-| [toggleterm.nvim](https://github.com/akinsho/toggleterm.nvim) | Floating / numbered terminals + lazygit launcher |
+| [toggleterm.nvim](https://github.com/akinsho/toggleterm.nvim) | Floating / numbered terminals |
 
 **Look & feel**
 

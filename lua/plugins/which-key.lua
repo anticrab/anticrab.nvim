@@ -19,7 +19,6 @@ return {
       { "<leader>e", group = "Explorer / Errors" },
       { "<leader>f", group = "Find (Telescope)" },
       { "<leader>g", group = "LSP / Goto" },
-      { "<leader>l", group = "Lazygit" },
       { "<leader>o", group = "Ollama / Avante" },
       { "<leader>q", group = "Quit / Quickfix" },
       { "<leader>r", group = "Rename" },

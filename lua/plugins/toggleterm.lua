@@ -1,4 +1,4 @@
--- Floating terminal + lazygit (toggleterm) + numbered buffer-terminals (нативные :terminal буферы)
+-- Floating terminal (toggleterm) + numbered buffer-terminals (нативные :terminal буферы)
 return {
   "akinsho/toggleterm.nvim",
   version = "*",
@@ -34,71 +34,8 @@ return {
       hidden = true,
     })
 
-    -- Force nvim to re-issue cursor-shape escape sequences to the host
-    -- terminal. lazygit (via tcell) writes DECSCUSR/DECTCEM directly while
-    -- it's running; on exit nvim's redraw won't reset the emulator's cursor
-    -- because from nvim's perspective `guicursor` "didn't change". Setting
-    -- the option to empty and back forces a fresh emit. The defer is needed
-    -- so nvim has time to process the empty value before we restore.
-    local function reset_cursor_shape()
-      local saved = vim.o.guicursor
-      vim.o.guicursor = ""
-      vim.defer_fn(function() vim.o.guicursor = saved end, 50)
-    end
-
-    -- Lazygit на весь экран
-    local lazygit = Terminal:new({
-      cmd = "lazygit",
-      direction = "float",
-      float_opts = {
-        border = "rounded",
-        width = function() return math.floor(vim.o.columns * 0.95) end,
-        height = function() return math.floor(vim.o.lines * 0.92) end,
-      },
-      hidden = true,
-      on_open = function(term)
-        vim.cmd("startinsert!")
-
-        -- Drop terminal-mode mappings installed by the global TermOpen autocmd
-        -- below — they conflict with lazygit's own bindings. The big one is
-        -- `jk` → exit-terminal-mode: lazygit uses plain j/k for navigation, so
-        -- hitting j then k yanks you into normal-mode and nvim's buffer cursor
-        -- jumps to the last visible line (bottom-right), leaving lazygit
-        -- unresponsive. <C-h/j/k/l> are window-nav maps; bypass them too.
-        for _, lhs in ipairs({ "jk", "<C-h>", "<C-j>", "<C-k>", "<C-l>" }) do
-          pcall(vim.keymap.del, "t", lhs, { buffer = term.bufnr })
-        end
-
-        -- If the user somehow lands in normal-mode inside the lazygit buffer
-        -- (e.g. via <C-\><C-n>), re-entering the buffer forces insert again
-        -- so lazygit immediately becomes interactive without manual `i`.
-        vim.api.nvim_create_autocmd("BufEnter", {
-          buffer = term.bufnr,
-          callback = function() vim.cmd("startinsert!") end,
-        })
-
-        -- `q` hides the float (lazygit keeps running in background). Reset
-        -- cursor on the way out — this path doesn't fire `on_close`.
-        vim.keymap.set("t", "q", function()
-          reset_cursor_shape()
-          vim.cmd("close")
-        end, { buffer = term.bufnr, noremap = true, silent = true })
-      end,
-      on_close = reset_cursor_shape,
-    })
-
     local map = vim.keymap.set
     map("n", "<leader>/",  function() float_term:toggle() end, { desc = "Terminal float (quick)" })
-    map("n", "<leader>lg", function()
-      if vim.fn.executable("lazygit") == 0 then
-        vim.notify("lazygit not installed. Run: sudo apt install lazygit", vim.log.levels.ERROR)
-        return
-      end
-      local was_open = lazygit:is_open()
-      lazygit:toggle()
-      -- Going from open → hidden also bypasses on_close, so reset cursor here too.
-      if was_open then reset_cursor_shape() end
-    end, { desc = "Lazygit (float)" })
 
     -- Numbered terminal-buffers — обычные :terminal буферы, видны в barbar сверху как вкладки.
     -- Создаются на первом нажатии, переиспользуются на последующих.
@@ -121,7 +58,7 @@ return {
     end
 
     -- Удобный выход из terminal-mode: jk → normal-mode
-    -- Esc не трогаем, чтобы TUI-приложения (lazygit, htop) могли его использовать.
+    -- Esc не трогаем, чтобы TUI-приложения (htop и т.п.) могли его использовать.
     vim.api.nvim_create_autocmd("TermOpen", {
       pattern = "term://*",
       callback = function()
