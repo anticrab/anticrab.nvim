@@ -25,31 +25,43 @@ return {
     end
 
     -- Helper: turn a "native" linter spec into one that runs inside the
-    -- container. Strategy: replace `cmd` with "docker", and rewrite `args` so
-    -- that argv[0] is the in-container linter and any path placeholders are
-    -- translated host→container.
+    -- container. Strategy: cmd = "docker"; args = the `docker … exec … bash -c`
+    -- argv with argv[0] ("docker") stripped.
+    --
+    -- nvim-lint requires `args` to be a LIST whose elements are strings or
+    -- `fun():string` (it does `vim.tbl_map(eval, args)`), NOT a single function.
+    -- The docker prefix is static for a given cfg; only the final `bash -c`
+    -- payload depends on the current buffer, so just that last element is a
+    -- function. We also set `append_fname = false` so nvim-lint doesn't tack the
+    -- buffer's *host* path onto the end of the docker invocation.
     local function wrap_linter(name, inner_bin, native_args)
-      lint.linters[name] = vim.tbl_deep_extend("force", lint.linters[name] or {}, {
-        cmd = "docker",
-        stdin = false,
-        ignore_exitcode = true,
-        args = function()
-          -- nvim-lint expands {file} only inside string args before spawning.
-          -- We need the actual container path right now, so resolve manually.
-          local fname = vim.api.nvim_buf_get_name(0)
-          local container_path = host_to_container(fname)
-          local inner = { inner_bin }
-          for _, a in ipairs(native_args) do
-            if a == "{file}" or a == "$FILENAME" then
-              table.insert(inner, container_path)
-            else
-              table.insert(inner, a)
-            end
+      -- Resolve the in-container `bash -c` payload for the current buffer.
+      local function payload()
+        local container_path = host_to_container(vim.api.nvim_buf_get_name(0))
+        local inner = { inner_bin }
+        for _, a in ipairs(native_args) do
+          if a == "{file}" or a == "$FILENAME" then
+            table.insert(inner, container_path)
+          else
+            table.insert(inner, a)
           end
-          local full = docker_exec.build(cfg, inner)
-          return vim.list_slice(full, 2)
-        end,
-      })
+        end
+        local full = docker_exec.build(cfg, inner)
+        return full[#full] -- the bash payload is the last argv element
+      end
+
+      -- Static argv prefix (everything except argv[0]="docker" and the payload).
+      local sample = docker_exec.build(cfg, "x")
+      local args = vim.list_slice(sample, 2, #sample - 1)
+      table.insert(args, payload)
+
+      local linter = lint.linters[name] or {}
+      linter.cmd = "docker"
+      linter.stdin = false
+      linter.append_fname = false
+      linter.ignore_exitcode = true
+      linter.args = args
+      lint.linters[name] = linter
     end
 
     if cfg then
@@ -62,9 +74,22 @@ return {
 
       for _, name in ipairs(py_linters) do
         if name == "ament_flake8" then
-          -- Reuse flake8 parser but route to ament_flake8 binary in the container.
-          lint.linters.ament_flake8 = vim.deepcopy(lint.linters.flake8)
-          wrap_linter("ament_flake8", "ament_flake8", { "--no-show-source", "{file}" })
+          -- ament_flake8 wraps flake8 but exposes NEITHER `--format` nor
+          -- `--no-show-source` (the latter makes it exit 2 with a usage error),
+          -- so we can't coerce flake8's colon-delimited format that nvim-lint's
+          -- stock parser expects. Parse ament_flake8's native output instead:
+          --   <path>:<line>:<col>: <CODE> <message>
+          -- The anchored pattern only matches those lines; the source-echo
+          -- header and the trailing summary footer are ignored.
+          lint.linters.ament_flake8 = {
+            parser = require("lint.parser").from_pattern(
+              "^[^:]+:(%d+):(%d+): (%w+) (.+)",
+              { "lnum", "col", "code", "message" },
+              nil,
+              { ["source"] = "ament_flake8", ["severity"] = vim.diagnostic.severity.WARN }
+            ),
+          }
+          wrap_linter("ament_flake8", "ament_flake8", { "{file}" })
           linters_by_ft.python = linters_by_ft.python or {}
           table.insert(linters_by_ft.python, "ament_flake8")
         elseif name == "ament_pep257" then
