@@ -57,6 +57,9 @@ sudo apt update && sudo apt install -y \
 
 # 3. Clone the config and launch nvim
 git clone https://github.com/anticrab/anticrab.nvim ~/.config/nvim && nvim
+
+# 4. (optional) add a `zvim` shell alias to launch Neovim — idempotent
+cd ~/.config/nvim && ./install.sh
 ```
 
 That's it. On first launch:
@@ -80,6 +83,10 @@ After the dust settles, run `:checkhealth` — everything should be green except
 | `fd-find` | Faster `find_files` for Telescope (binary is `fdfind` on Debian) |
 | `xclip` *(X11)* / `wl-clipboard` *(Wayland)* | System-clipboard `"+y` / `"+p` |
 | Nerd Font | Icons in lualine / barbar / neo-tree (set in your terminal, not via apt) |
+
+### `zvim` shell alias (optional)
+
+`./install.sh` adds `alias zvim='nvim'` to `~/.bashrc` (and `~/.zshrc` if you have one) so you can launch the editor with `zvim`. It's idempotent — re-running never duplicates the alias, an existing `alias zvim=` line (yours or a previous run's) is left untouched, and rc files you don't already have are never created. Open a new shell afterwards (or `source` your rc) to pick it up.
 
 ### Optional packages (specific features will warn if missing)
 
