@@ -51,7 +51,19 @@ dual("n", "<leader>wqa", ":wqa<CR>", { desc = "Save and quit all" })
 dual("n", "<leader>qa", ":qa<CR>", { desc = "Quit all without saving" })
 dual("n", "<leader>ww", ":w<CR>", { desc = "Save file" })
 dual("n", "<leader>E", ":e", { desc = "Reload page" })
-dual("n", "gx", ":!xdg-open <c-r><c-a><CR>", { desc = "Open URL under cursor" })
+dual("n", "gx", function()
+  local target = vim.fn.expand("<cfile>")
+  if not target or target == "" then
+    vim.notify("No URL/path under cursor", vim.log.levels.WARN)
+    return
+  end
+  -- vim.ui.open parses URLs/paths properly and dispatches to xdg-open
+  -- asynchronously (no blocking :! shell-out, unlike the old mapping).
+  local ok, err = pcall(vim.ui.open, target)
+  if not ok then
+    vim.notify("Failed to open: " .. tostring(err), vim.log.levels.ERROR)
+  end
+end, { desc = "Open URL/file under cursor" })
 dual("n", ";", ":", { noremap = true, silent = false, desc = "Enter command mode" })
 dual("n", "<leader><leader>", ":Neotree reveal float<CR>", { desc = "Reveal current file in explorer" })
 
