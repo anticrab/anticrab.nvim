@@ -123,8 +123,10 @@ dual('n', '<leader>gr', require('telescope.builtin').lsp_references, { desc = "S
 dual('n', '<leader>gc', '<cmd>lua vim.lsp.buf.clear_references()<CR>', { desc = "Clear references" })
 dual('n', '<leader>gs', '<cmd>lua vim.lsp.buf.signature_help()<CR>', { desc = "Signature help" })
 dual('n', '<leader>rr', '<cmd>lua vim.lsp.buf.rename()<CR>', { desc = "LSP rename" })
-dual('n', '<leader>gf', '<cmd>lua vim.lsp.buf.format({async = true})<CR>', { desc = "Format code" })
-dual('v', '<leader>gf', '<cmd>lua vim.lsp.buf.format({async = true})<CR>', { desc = "Format selection" })
+-- Manual format via conform (ruff / clang_format / prettier …), falling back to
+-- the LSP formatter for filetypes conform doesn't handle. Mirrors :Format.
+dual('n', '<leader>gf', '<cmd>lua require("conform").format({ async = true, lsp_format = "fallback" })<CR>', { desc = "Format code" })
+dual('v', '<leader>gf', '<cmd>lua require("conform").format({ async = true, lsp_format = "fallback" })<CR>', { desc = "Format selection" })
 dual('n', '<leader>ga', '<cmd>lua vim.lsp.buf.code_action()<CR>', { desc = "Code actions" })
 dual('n', '<leader>gl', '<cmd>lua vim.diagnostic.open_float()<CR>', { desc = "Show line diagnostics" })
 dual('n', '<leader>gp', '<cmd>lua vim.diagnostic.goto_prev()<CR>', { desc = "Previous diagnostic" })

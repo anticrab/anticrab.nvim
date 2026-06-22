@@ -9,6 +9,7 @@ return {
       ensure_installed = {
         "ruff",         -- Python: formatter + linter
         "clang-format", -- C/C++: formatter
+        "prettier",     -- Markdown: formatter (manual via :Format / <leader>gf)
         "debugpy",      -- Python: DAP
         "codelldb",     -- C/C++: DAP
       },

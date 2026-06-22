@@ -23,6 +23,7 @@ return {
       python = { "ruff_format", "ruff_organize_imports" },
       cpp = { "clang_format" },
       c = { "clang_format" },
+      markdown = { "prettier" },
     }
 
     local custom_formatters = {}
