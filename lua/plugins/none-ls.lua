@@ -24,6 +24,9 @@ return {
       cpp = { "clang_format" },
       c = { "clang_format" },
       markdown = { "prettier" },
+      json = { "prettier" },
+      jsonc = { "prettier" },
+      yaml = { "prettier" },
     }
 
     local custom_formatters = {}
