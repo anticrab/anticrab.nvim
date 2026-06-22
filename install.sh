@@ -121,8 +121,10 @@ bootstrap_nvim() {
         echo "==> Skipping plugin bootstrap: nvim not available."
         return
     fi
-    echo "==> Installing plugins (lazy.nvim sync)…"
-    nvim --headless "+Lazy! sync" +qa || echo "    (lazy sync hiccupped; first launch will retry)"
+    # `restore` installs every plugin at the lockfile commit (reproducible);
+    # unlike `sync` it never updates plugins or rewrites lazy-lock.json.
+    echo "==> Installing plugins (lazy.nvim restore)…"
+    nvim --headless "+Lazy! restore" +qa || echo "    (lazy restore hiccupped; first launch will retry)"
     echo "==> Plugins ready. Mason tools, LSP servers and Treesitter parsers"
     echo "    install automatically the first time you launch nvim."
 }
