@@ -96,6 +96,16 @@ return {
         local wrapped = docker_lsp.wrap_cmd(server, opts.cmd, docker_cfg)
         if wrapped then
           opts.cmd = wrapped
+          -- The server runs in the container's PID namespace, where nvim's
+          -- host PID doesn't exist. Per the LSP spec a server should exit when
+          -- its parent `processId` is gone, so pyright promptly quits (exit 1)
+          -- on the unfindable host PID. Send null so it doesn't monitor a PID
+          -- it can never see; nvim still shuts it down via shutdown/exit.
+          local prev_before_init = opts.before_init
+          opts.before_init = function(params, config)
+            params.processId = vim.NIL
+            if prev_before_init then prev_before_init(params, config) end
+          end
         end
 
         vim.lsp.config(server, opts)
