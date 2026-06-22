@@ -27,6 +27,14 @@ return {
       json = { "prettier" },
       jsonc = { "prettier" },
       yaml = { "prettier" },
+      lua = { "stylua" },
+      sh = { "shfmt" },
+      bash = { "shfmt" },
+      cmake = { "gersemi" },
+      toml = { "taplo" },
+      -- XML (ROS package.xml / launch / xacro) via xmllint.
+      -- Needs the system `xmllint`: sudo apt install libxml2-utils
+      xml = { "xmllint" },
     }
 
     local custom_formatters = {}

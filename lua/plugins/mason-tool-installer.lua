@@ -9,7 +9,11 @@ return {
       ensure_installed = {
         "ruff",         -- Python: formatter + linter
         "clang-format", -- C/C++: formatter
-        "prettier",     -- Markdown: formatter (manual via :Format / <leader>gf)
+        "prettier",     -- Markdown / JSON / YAML: formatter
+        "stylua",       -- Lua: formatter
+        "shfmt",        -- Shell (bash/sh): formatter
+        "gersemi",      -- CMake: formatter
+        "taplo",        -- TOML: formatter
         "debugpy",      -- Python: DAP
         "codelldb",     -- C/C++: DAP
       },

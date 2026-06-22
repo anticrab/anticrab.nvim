@@ -35,7 +35,7 @@ A modern, modular Neovim configuration written in **Lua**, focused on performanc
 - 🎯 Debugging via `nvim-dap` + `dap-ui` (Python via debugpy, C/C++ via codelldb)
 - 🧱 Code completion through `nvim-cmp` + LuaSnip
 - 🎨 Custom UI: `lualine`, `barbar`, `barbecue` breadcrumbs, `catppuccin` theme (auto-syncs to GNOME light/dark)
-- 🧼 Manual formatting via `conform.nvim` (Python `ruff`, C/C++ `clang-format`, Markdown/JSON/YAML `prettier`) — format-on-save off by default, toggle with `:FormatEnable`
+- 🧼 Manual formatting via `conform.nvim` (Python, C/C++, Lua, Shell, CMake, TOML, Markdown/JSON/YAML, XML) — format-on-save off by default, toggle with `:FormatEnable`
 - 💡 Git: `gitsigns.nvim` (hunk gutter), `diffview.nvim` (PR-style diffs)
 - 📖 In-buffer Markdown rendering via `render-markdown.nvim` (raw source shown while editing; toggle with `<leader>m`)
 - ⌨️ Live keybinding hints with `which-key.nvim`
@@ -416,7 +416,7 @@ Reserved keys: `s`, `r`, `i`, `l` cannot be used in `commands[*].key`.
 | [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) + [mason.nvim](https://github.com/williamboman/mason.nvim) | LSP setup; auto-installs `lua_ls`, `marksman`, `lemminx`, `quick_lint_js`, `pyright`, `clangd` |
 | [mason-tool-installer.nvim](https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim) | Auto-installs `ruff`, `clang-format`, `debugpy`, `codelldb` |
 | [nvim-cmp](https://github.com/hrsh7th/nvim-cmp) + [LuaSnip](https://github.com/L3MON4D3/LuaSnip) | Completion + snippets |
-| [conform.nvim](https://github.com/stevearc/conform.nvim) | Manual formatting; format-on-save off by default (Python `ruff`, C/C++ `clang-format`, Markdown/JSON/YAML `prettier`; container-routed when a `.nvim-docker.lua` marker is active) |
+| [conform.nvim](https://github.com/stevearc/conform.nvim) | Manual formatting; format-on-save off by default (`ruff`, `clang-format`, `stylua`, `shfmt`, `gersemi`, `taplo`, `prettier`, `xmllint`; container-routed when a `.nvim-docker.lua` marker is active) |
 | [nvim-lint](https://github.com/mfussenegger/nvim-lint) | Async linters on save (only attaches per-marker — `ament_flake8` / `ament_pep257` / `clang-tidy` inside the container) |
 | [nvim-dap](https://github.com/mfussenegger/nvim-dap) + [dap-ui](https://github.com/rcarriga/nvim-dap-ui) + [dap-virtual-text](https://github.com/theHamsta/nvim-dap-virtual-text) | Debug Adapter Protocol with UI |
 | [nvim-dap-python](https://github.com/mfussenegger/nvim-dap-python) | Python debugger wrapper (via debugpy) |

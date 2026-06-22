@@ -324,7 +324,7 @@ Auto-saves and auto-restores sessions per cwd. Commands: `:SessionSave`, `:Sessi
 - **indent-blankline** — `|` indent guides.
 - **barbecue** — LSP-based breadcrumbs in the winbar.
 - **lualine** — status line, theme `catppuccin-nvim`.
-- **conform.nvim** — formatting: Python via `ruff_format` + `ruff_organize_imports`, C/C++ via `clang_format`, Markdown / JSON / YAML via `prettier`. **Format-on-save is OFF by default** — format manually with `<leader>gf` or `:Format` (both go through conform, falling back to the LSP formatter where conform has none). Toggle auto-format-on-save with `:FormatEnable` / `:FormatDisable` / `:FormatToggle`.
+- **conform.nvim** — formatting: Python (`ruff_format` + `ruff_organize_imports`), C/C++ (`clang_format`), Lua (`stylua`), Shell (`shfmt`), CMake (`gersemi`), TOML (`taplo`), Markdown / JSON / YAML (`prettier`), XML (`xmllint` — needs `sudo apt install libxml2-utils`). **Format-on-save is OFF by default** — format manually with `<leader>gf` or `:Format` (both go through conform, falling back to the LSP formatter where conform has none). Toggle auto-format-on-save with `:FormatEnable` / `:FormatDisable` / `:FormatToggle`.
 - **todo-comments** — highlights `TODO/FIXME/HACK` (`:TodoTelescope`, `:Trouble todo`).
 - **treesitter** — highlighting for `lua/python/c/cpp/cmake` + auto-install for new languages.
 
