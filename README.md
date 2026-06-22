@@ -63,7 +63,6 @@ That's it. On first launch:
 - `lazy.nvim` bootstraps itself, then clones every plugin (~1 min — wait for the progress bar).
 - `mason-lspconfig` + `mason-tool-installer` auto-install LSP servers (`lua_ls`, `pyright`, `clangd`, `lemminx`, `marksman`, `quick_lint_js`) and tools (`ruff`, `clang-format`, `debugpy`, `codelldb`) in the background.
 - Treesitter parsers auto-install on first open of any new filetype.
-- A `zvim` shell alias (launches Neovim) is appended to `~/.bashrc` / `~/.zshrc` if not already present — open a new shell to use it. Idempotent and only touches rc files you already have.
 
 After the dust settles, run `:checkhealth` — everything should be green except the deliberately disabled Node/Perl/Ruby/Python-host providers.
 

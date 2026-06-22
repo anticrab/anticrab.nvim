@@ -38,6 +38,3 @@ require("lazy").setup("plugins", {
 require("core.options")
 require("core.keymaps")
 pcall(require, "private")
-
--- Ensure the `zvim` shell alias exists (idempotent; interactive sessions only)
-pcall(function() require("core.shell-alias").setup() end)
