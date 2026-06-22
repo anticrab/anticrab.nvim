@@ -45,22 +45,22 @@ A modern, modular Neovim configuration written in **Lua**, focused on performanc
 
 ## 🚀 Getting Started
 
-### TL;DR — three commands
+### TL;DR
 
 ```bash
-# 1. System dependencies (X11; for Wayland swap xclip → wl-clipboard)
-sudo apt update && sudo apt install -y \
-    neovim git curl build-essential ripgrep fd-find xclip \
-    nodejs npm python3-pip python3-venv libxml2-utils
+# 1. Clone the config
+git clone https://github.com/anticrab/anticrab.nvim ~/.config/nvim
 
-# 2. Nerd Font (set it as your terminal font afterwards — required for icons)
+# 2. Run the installer — system deps, Neovim, the `zvim` alias, and plugins.
+#    Idempotent; uses apt (Debian/Ubuntu). See "What ./install.sh does" below
+#    for the manual equivalent on other distros.
+cd ~/.config/nvim && ./install.sh
+
+# 3. Nerd Font — set it as your terminal font (required for icons)
 #    https://www.nerdfonts.com/font-downloads — pick e.g. JetBrainsMono Nerd Font
 
-# 3. Clone the config and launch nvim
-git clone https://github.com/anticrab/anticrab.nvim ~/.config/nvim && nvim
-
-# 4. (optional) add a `zvim` shell alias to launch Neovim — idempotent
-cd ~/.config/nvim && ./install.sh
+# 4. Launch (open a new shell first so the alias is picked up)
+zvim
 ```
 
 That's it. On first launch:
@@ -88,9 +88,26 @@ After the dust settles, run `:checkhealth` — everything should be green except
 | `xclip` *(X11)* / `wl-clipboard` *(Wayland)* | System-clipboard `"+y` / `"+p` |
 | Nerd Font | Icons in lualine / barbar / neo-tree (set in your terminal, not via apt) |
 
-### `zvim` shell alias (optional)
+### What `./install.sh` does
 
-`./install.sh` adds `alias zvim='nvim'` to `~/.bashrc` (and `~/.zshrc` if you have one) so you can launch the editor with `zvim`. It's idempotent — re-running never duplicates the alias, an existing `alias zvim=` line (yours or a previous run's) is left untouched, and rc files you don't already have are never created. Open a new shell afterwards (or `source` your rc) to pick it up.
+Idempotent, safe to re-run. On Debian/Ubuntu a no-flag run does all of:
+
+1. **System dependencies** via `apt` — the packages in the table above (clipboard tool picked from `$WAYLAND_DISPLAY`).
+2. **Neovim ≥ 0.11** — if missing or too old it installs the latest via `snap` (apt's is usually behind); an up-to-date nvim is left alone.
+3. **`zvim` alias** — adds `alias zvim='nvim'` to `~/.bashrc` / `~/.zshrc` if present. Never duplicates an existing `alias zvim=` line and never creates rc files you don't have. Open a new shell (or `source` your rc) to pick it up.
+4. **Plugins** — a headless `lazy.nvim` sync so the first launch is quick. Mason tools, LSP servers and Treesitter parsers install automatically on the first interactive launch.
+
+Flags: `--alias-only` (just step 3), `--no-bootstrap` (skip step 4), `-h`.
+
+**Prefer manual / not on Debian-Ubuntu?** Install the deps yourself, then run `./install.sh --alias-only` (or just launch nvim):
+
+```bash
+# Debian/Ubuntu (Wayland: swap xclip → wl-clipboard)
+sudo apt install -y \
+    git curl build-essential ripgrep fd-find xclip \
+    nodejs npm python3-pip python3-venv libxml2-utils
+# Neovim ≥ 0.11 separately, e.g.:  sudo snap install nvim --classic
+```
 
 ### Optional packages (specific features will warn if missing)
 
