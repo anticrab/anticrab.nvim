@@ -37,7 +37,6 @@ A modern, modular Neovim configuration written in **Lua**, focused on performanc
 - 🎨 Custom UI: `lualine`, `barbar`, `barbecue` breadcrumbs, `catppuccin` theme (auto-syncs to GNOME light/dark)
 - 🧼 Manual formatting via `conform.nvim` (Python `ruff`, C/C++ `clang-format`) — format-on-save off by default, toggle with `:FormatEnable`
 - 💡 Git: `gitsigns.nvim` (hunk gutter), `diffview.nvim` (PR-style diffs)
-- 🖥 Built-in terminal layer via `toggleterm.nvim`: floating quick-shell + numbered buffer-terminals
 - ⌨️ Live keybinding hints with `which-key.nvim`
 - 🎨 Custom random tabs colors ![screenshot](media/4.gif)
 
@@ -143,8 +142,6 @@ A small starter set; full reference in [`CHEATSHEET.md`](./CHEATSHEET.md). Press
 | `<leader>fg` | Live grep across project |
 | `<leader><leader>` | Reveal current file in file explorer |
 | `ss` / `S` | Flash 2-char jump / treesitter-aware jump |
-| `<leader>/` | Toggle floating terminal |
-| `<leader>t1`–`<leader>t9` | Numbered terminal buffers |
 | `<leader>ww` / `<leader>qq` | Save / quit |
 
 ### Troubleshooting
@@ -425,13 +422,13 @@ Reserved keys: `s`, `r`, `i`, `l` cannot be used in `commands[*].key`.
 | [trouble.nvim](https://github.com/folke/trouble.nvim) | Diagnostics/quickfix UI |
 | [todo-comments.nvim](https://github.com/folke/todo-comments.nvim) | TODO/FIXME/HACK highlighting + search |
 
-**Git & terminal**
+**Git**
 
 | Plugin | Purpose |
 |---|---|
 | [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim) | Git gutter + hunk operations + blame |
 | [diffview.nvim](https://github.com/sindrets/diffview.nvim) | PR-style diff & file history |
-| [toggleterm.nvim](https://github.com/akinsho/toggleterm.nvim) | Floating / numbered terminals |
+| [toggleterm.nvim](https://github.com/akinsho/toggleterm.nvim) | Terminal helper — used only by the docker-project log tail (`<leader>Dl`) |
 
 **Look & feel**
 

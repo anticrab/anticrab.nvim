@@ -224,39 +224,6 @@ Hunk gutter signs (added/modified/deleted) are enabled by default. No `<leader>`
 | `:Gitsigns stage_hunk` / `undo_stage_hunk` | Stage / unstage hunk |
 | `:Gitsigns reset_hunk` | Discard hunk changes |
 
-## Terminal
-
-**Quick float — for short ad-hoc commands:**
-
-| Key | Action |
-|---|---|
-| `<leader>/` | Toggle floating terminal (one shared session) |
-
-**Numbered terminals — appear in barbar at the top as buffer-tabs:**
-
-| Key | Action |
-|---|---|
-| `<leader>t1` … `<leader>t9` | Open / focus terminal-buffer #N |
-
-These are plain `:terminal` buffers, just like file buffers — they show up in barbar as `term-1`, `term-2`, etc. Switch between them via normal buffer commands (`<leader>tn` / `<leader>tp` / `<leader>tt`), close with `<leader>tx` (force-closes, killing the process). Hitting `<leader>tN` again returns you to the same shell with full history.
-
-**Inside a terminal:**
-
-| Key | Action |
-|---|---|
-| `jk` | Leave to normal-mode (terminal stays open) |
-| `<C-\><C-n>` | Same, canonical method |
-| `<C-h/j/k/l>` | Move to neighboring window |
-
-`<Esc>` is left untouched in terminal-mode so TUI apps (htop, fzf) continue to work.
-
-**On-demand split terminals via commands:**
-
-```
-:ToggleTerm direction=horizontal size=20      " bottom split, height 20
-:ToggleTerm direction=vertical size=80        " right split, width 80
-```
-
 ## Git — diffview
 
 | Key | Action |
@@ -357,7 +324,7 @@ Auto-saves and auto-restores sessions per cwd. Commands: `:SessionSave`, `:Sessi
 | `<leader>` (and wait 0.3s) | Popup with all available continuations and descriptions |
 | `<leader>?` | Show all mappings active in the current buffer |
 
-Prefix groups are labeled: `<leader>g` = LSP/Goto, `<leader>f` = Find, `<leader>x` = Trouble, `<leader>s` = Splits, `<leader>t` = Tabs/Buffers/Term#, `<leader>d` = DAP/Diffview, etc.
+Prefix groups are labeled: `<leader>g` = LSP/Goto, `<leader>f` = Find, `<leader>x` = Trouble, `<leader>s` = Splits, `<leader>t` = Tabs/Buffers, `<leader>d` = DAP/Diffview, etc.
 
 ## Themes
 

@@ -23,7 +23,7 @@ return {
       { "<leader>q", group = "Quit / Quickfix" },
       { "<leader>r", group = "Rename" },
       { "<leader>s", group = "Splits" },
-      { "<leader>t", group = "Tabs / Buffers / Term#" },
+      { "<leader>t", group = "Tabs / Buffers" },
       { "<leader>T", group = "Tabs (move)" },
       { "<leader>w", group = "Write" },
       { "<leader>x", group = "Trouble" },
