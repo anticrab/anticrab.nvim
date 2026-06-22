@@ -21,6 +21,8 @@ return {
       'c',
       'cpp',
       'cmake',
+      'markdown',
+      'markdown_inline',
     },
   },
   config = function (_, opts)

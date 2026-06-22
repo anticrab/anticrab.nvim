@@ -283,6 +283,17 @@ In a CMake project: build, then `<leader>dc` and enter the path to the binary in
 
 Autopairs: brackets/quotes auto-close (treesitter-aware).
 
+## Markdown
+
+`render-markdown.nvim` renders headings, lists, tables, checkboxes and code blocks **inline** in the buffer.
+
+| Key / cmd | Action |
+|---|---|
+| `<leader>m` | Toggle the rendered view on/off |
+| `:RenderMarkdown toggle` | Same, via command |
+
+While editing you still see the raw source: insert & visual modes show plain markdown, and the line under the cursor stays un-rendered in normal mode too. Format a Markdown file with `<leader>gf` or `:Format` (prettier).
+
 ## Completion (nvim-cmp) — insert mode
 
 | Key | Action |

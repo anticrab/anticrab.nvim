@@ -37,6 +37,7 @@ A modern, modular Neovim configuration written in **Lua**, focused on performanc
 - 🎨 Custom UI: `lualine`, `barbar`, `barbecue` breadcrumbs, `catppuccin` theme (auto-syncs to GNOME light/dark)
 - 🧼 Manual formatting via `conform.nvim` (Python `ruff`, C/C++ `clang-format`, Markdown `prettier`) — format-on-save off by default, toggle with `:FormatEnable`
 - 💡 Git: `gitsigns.nvim` (hunk gutter), `diffview.nvim` (PR-style diffs)
+- 📖 In-buffer Markdown rendering via `render-markdown.nvim` (raw source shown while editing; toggle with `<leader>m`)
 - ⌨️ Live keybinding hints with `which-key.nvim`
 - 🎨 Custom random tabs colors ![screenshot](media/4.gif)
 
@@ -438,6 +439,7 @@ Reserved keys: `s`, `r`, `i`, `l` cannot be used in `commands[*].key`.
 | [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim) | Statusline |
 | [barbar.nvim](https://github.com/romgrk/barbar.nvim) | Buffer tabs at top |
 | [barbecue.nvim](https://github.com/utilyre/barbecue.nvim) | LSP breadcrumbs in winbar |
+| [render-markdown.nvim](https://github.com/MeanderingProgrammer/render-markdown.nvim) | In-buffer Markdown rendering (`<leader>m` to toggle; raw source while editing) |
 | [indent-blankline.nvim](https://github.com/lukas-reineke/indent-blankline.nvim) | Indent guides |
 
 ---
